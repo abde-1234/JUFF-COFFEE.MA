@@ -592,7 +592,13 @@ h1 {
   transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
 }
 .featured-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-card); }
-.featured-card > img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+.featured-card > img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+  background: var(--color-cream-2);
+}
 .featured-card > div { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 14px 14px 16px; }
 .featured-card p { margin: 0; color: var(--color-brown-3); font-size: 9px; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase; }
 .featured-card h3 { margin: 3px 0 0; font-family: var(--font-display); font-size: 19px; font-weight: 700; }
