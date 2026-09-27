@@ -20,7 +20,7 @@ assert(priceValues.length === 224, `Expected 224 product values; received ${pric
 assert(products.every(product => product.image && fs.existsSync(path.join(root, product.image))), 'A product image is missing');
 assert(OFFERS.length === 8, `Expected 8 offers; received ${OFFERS.length}`);
 assert(OFFERS.every(offer => fs.existsSync(path.join(root, offer.image))), 'An offer image is missing');
-assert(CONTACT.whatsapp === '212682698432', 'Official WhatsApp destination changed');
+assert(CONTACT.whatsapp === '212631139014', 'Official WhatsApp destination changed');
 assert(CONTACT.facebook === 'https://www.facebook.com/share/1C9qgVSaXs/?mibextid=wwXIfr', 'Official Facebook URL changed');
 
 const offerPrices = Object.fromEntries(OFFERS.map(offer => [offer.name, offer.price]));

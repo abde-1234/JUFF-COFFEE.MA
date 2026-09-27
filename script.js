@@ -3,7 +3,7 @@
 // Business contact details. Update here if they change.
 // WhatsApp: country code and number, digits only. Facebook: full HTTPS page URL.
 const CONTACT = Object.freeze({
-  whatsapp: '212682698432',
+  whatsapp: '212631139014',
   facebook: 'https://www.facebook.com/share/1C9qgVSaXs/?mibextid=wwXIfr',
 });
 
