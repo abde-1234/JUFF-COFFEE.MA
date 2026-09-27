@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
+  <circle cx="40" cy="40" r="36" stroke="#493325" stroke-width="1.3"/>
+  <circle cx="40" cy="40" r="31.5" stroke="#493325" stroke-width=".5"/>
+  <path d="M20 57C10 44 15 23 29 16M60 57c10-13 5-34-9-41" stroke="#493325" stroke-width="1.5"/>
+  <g fill="#56634a"><path d="M18 43c-7-1-8-6-7-9 6 1 8 5 7 9ZM18 33c-5-4-4-9-2-11 4 3 5 8 2 11ZM22 24c-2-5 0-9 4-10 2 5 0 8-4 10ZM18 43c0-6 3-9 7-9 0 5-3 8-7 9ZM20 30c3-5 7-6 10-4-2 4-6 5-10 4ZM62 43c7-1 8-6 7-9-6 1-8 5-7 9ZM62 33c5-4 4-9 2-11-4 3-5 8-2 11ZM58 24c2-5 0-9-4-10-2 5 0 8 4 10ZM62 43c0-6-3-9-7-9 0 5 3 8 7 9ZM60 30c-3-5-7-6-10-4 2 4 6 5 10 4Z"/></g>
+  <text x="40" y="52" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="43" fill="#493325">J</text>
+  <text x="40" y="64" text-anchor="middle" font-family="Arial,sans-serif" letter-spacing="1.1" font-size="5.5" font-weight="bold" fill="#493325">JUFF COFFEE</text>
+</svg>
