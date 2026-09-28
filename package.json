@@ -1,0 +1,13 @@
+{
+  "name": "juff-coffee",
+  "version": "1.0.0",
+  "private": true,
+  "homepage": "https://juff-coffee-mia.vercel.app/",
+  "description": "Juff Coffee static menu website",
+  "scripts": {
+    "build": "node tools/validate-step9.cjs && node --check script.js && node --check cart.js && node tools/test-cart.cjs && node tools/build.cjs",
+    "test": "node tools/test-cart.cjs",
+    "preview": "node tools/preview.cjs"
+  },
+  "engines": { "node": ">=20" }
+}

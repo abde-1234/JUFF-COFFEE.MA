@@ -1,6 +1,6 @@
 # Juff Coffee — Steps 1–8
 
-Open `../index.html` directly in a modern browser. No installation, build step, framework, or external network dependency is required for the homepage.
+For development, open `../index.html` directly in a modern browser. For deployment, run `npm run build` and test `npm run preview`; publish only `dist/`. No runtime dependencies or framework are required. See `../DEPLOYMENT.md` for the final production audit and configuration.
 
 ## Structure
 
@@ -89,10 +89,9 @@ Baseline captures were created before Step 8 as `step8-baseline-390.png` and `st
 
 ## Deployment actions
 
-The final public domain is not present in the project. Before deployment:
+The confirmed production URL is `https://juff-coffee-mia.vercel.app/`, configured in `package.json` under `homepage`.
 
-1. Replace the relative canonical, `og:url`, `og:image`, and `twitter:image` values in `index.html` with absolute HTTPS URLs on the final domain.
-2. Replace `REPLACE_WITH_PRODUCTION_DOMAIN` in `sitemap.xml.template`, save the result as `sitemap.xml`, and add its absolute URL to `robots.txt`.
-3. Serve the project over HTTPS with correct MIME types and long-lived immutable caching for versioned images, video, icons, CSS, and JavaScript. Enable Brotli or gzip for text resources.
-4. Configure deployment headers such as `Content-Security-Policy`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, and an appropriate `Permissions-Policy`. Enable HSTS only after HTTPS is working across the final domain.
-5. Run Lighthouse from the deployed HTTPS URL and validate the absolute social metadata with the Facebook and X sharing debuggers.
+1. Run `npm run build`. The build preserves site assets and injects absolute canonical/social/JSON-LD URLs, generates `dist/sitemap.xml`, and adds its URL to `dist/robots.txt`. `SITE_URL` can override the configured base for another deployment.
+2. Run `npm run preview` to serve only the production output at `http://127.0.0.1:4173`. The preview supports video range requests. On PowerShell systems that block `npm.ps1`, use `npm.cmd` for these commands.
+3. Deploy `dist/`. `vercel.json` specifies the build command and output directory. Source artwork, historical screenshots, audit tooling, credentials, and the legacy sitemap template are excluded from the output.
+4. Run Lighthouse and social-sharing validators after the public HTTPS deployment. Local browser measurements in `../DEPLOYMENT.md` are laboratory observations, not field Core Web Vitals.

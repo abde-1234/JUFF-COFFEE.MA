@@ -37,6 +37,7 @@
   <link rel="preload" href="images/hero/juff-iced-coffee-560.webp" as="image" type="image/webp" media="(max-width: 600px)" fetchpriority="high">
   <link rel="preload" href="images/hero/juff-iced-coffee-1000.webp" as="image" type="image/webp" media="(min-width: 601px)" fetchpriority="high">
   <link rel="stylesheet" href="style.css">
+  <script src="cart.js" defer></script>
   <script src="script.js" defer></script>
   <script type="application/ld+json">
     {
@@ -245,24 +246,24 @@
     </div>
     <button class="button button-primary dialog-done" type="button">Revenir à l’accueil <svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></button>
   </dialog>
-  <dialog class="order-dialog" id="order-dialog" aria-labelledby="order-dialog-title" aria-describedby="order-dialog-description">
+  <button class="cart-toggle" type="button" aria-label="Ouvrir ma commande" aria-haspopup="dialog" aria-controls="order-dialog" hidden>Ma commande <span class="cart-count">0</span></button>
+  <p class="sr-only" id="cart-status" role="status" aria-live="polite"></p>
+  <dialog class="order-dialog cart-dialog" id="order-dialog" aria-labelledby="order-dialog-title" aria-describedby="order-dialog-description">
     <button class="order-dialog-close" type="button" aria-label="Fermer">×</button>
     <img src="assets/logo.svg" width="58" height="58" alt="">
     <p class="eyebrow"><span></span> COMMANDER</p>
-    <h2 id="order-dialog-title"></h2>
-    <p id="order-dialog-description">Choisissez la quantité, puis continuez votre commande sur WhatsApp.</p>
-    <div class="order-dialog-row">
-      <span id="product-quantity-label">Quantité</span>
-      <div class="quantity-stepper" role="group" aria-labelledby="product-quantity-label" data-quantity-control>
-        <button type="button" data-quantity-action="decrease" aria-label="Diminuer la quantité">−</button>
-        <output aria-live="polite">1</output>
-        <button type="button" data-quantity-action="increase" aria-label="Augmenter la quantité">+</button>
-      </div>
-    </div>
-    <a class="order-dialog-whatsapp" href="https://wa.me/212631139014" target="_blank" rel="noopener noreferrer">
+    <h2 id="order-dialog-title">Ma commande</h2>
+    <p id="order-dialog-description">Vérifiez vos articles avant de continuer sur WhatsApp.</p>
+    <p class="cart-empty">Votre commande est vide.</p>
+    <ul class="cart-items"></ul>
+    <p class="cart-storage-note" hidden>Votre commande reste disponible dans cet onglet, mais ne peut pas être enregistrée sur cet appareil.</p>
+    <div class="cart-footer">
+    <button class="cart-clear" type="button" disabled>Vider la commande</button>
+    <button class="order-dialog-whatsapp" type="button" disabled>
       <svg class="icon" aria-hidden="true"><use href="#icon-whatsapp"/></svg>
       Commander sur WhatsApp
-    </a>
+    </button>
+    </div>
   </dialog>
   <template id="product-card-template">
     <li class="product-item">
@@ -282,10 +283,17 @@
             <div><dt>PV</dt><dd data-metric="pv"></dd></div>
           </dl>
         </div>
-        <button class="product-order-button" type="button" data-product-order>
-          <svg class="icon" aria-hidden="true"><use href="#icon-whatsapp"/></svg>
-          <span>Commander</span>
-        </button>
+        <div class="product-order-controls">
+          <label class="product-type-label">Type</label>
+          <select class="product-type" required><option value="">Choisir…</option></select>
+          <div class="quantity-stepper" role="group" aria-label="Quantité" data-quantity-control>
+            <button type="button" data-quantity-action="decrease" aria-label="Diminuer la quantité">−</button>
+            <output aria-live="polite">1</output>
+            <button type="button" data-quantity-action="increase" aria-label="Augmenter la quantité">+</button>
+          </div>
+          <button class="product-order-button" type="button" data-product-order>Ajouter</button>
+          <p class="product-order-feedback" role="status" hidden></p>
+        </div>
       </article>
     </li>
   </template>
@@ -310,11 +318,9 @@
             <output aria-live="polite">1</output>
             <button type="button" data-quantity-action="increase" aria-label="Augmenter la quantité">+</button>
           </div>
-          <a class="offer-order-button" href="https://wa.me/212631139014" target="_blank" rel="noopener noreferrer">
-            <svg class="icon" aria-hidden="true"><use href="#icon-whatsapp"/></svg>
-            Commander sur WhatsApp
-          </a>
+          <button class="offer-order-button" type="button">Ajouter à la commande</button>
         </div>
+        <p class="offer-order-feedback" role="status" hidden></p>
       </div>
     </article>
   </template>

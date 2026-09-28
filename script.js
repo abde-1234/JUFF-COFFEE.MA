@@ -190,10 +190,15 @@ const dialogTitle = document.querySelector('#dialog-title');
 const dialogDescription = document.querySelector('#dialog-description');
 const dialogSocials = document.querySelector('.dialog-socials');
 const orderDialog = document.querySelector('#order-dialog');
-const orderDialogTitle = document.querySelector('#order-dialog-title');
 const orderDialogLink = document.querySelector('.order-dialog-whatsapp');
 const mobileViewport = window.matchMedia('(max-width: 759px)');
-let activeProductName = '';
+const cartToggle = document.querySelector('.cart-toggle');
+const cartItems = document.querySelector('.cart-items');
+const cartStatus = document.querySelector('#cart-status');
+const CART_STORAGE_KEY = 'juffOrderCart:v1';
+const orderCart = new JuffOrderCart(MENU_PRODUCTS, OFFERS);
+try { orderCart.restore(localStorage.getItem(CART_STORAGE_KEY)); }
+catch { document.querySelector('.cart-storage-note').hidden = false; }
 
 document.documentElement.classList.add('js');
 toggle.hidden = false;
@@ -246,44 +251,77 @@ function quantityFrom(control) {
 }
 
 function setQuantity(control, quantity) {
-  const safeQuantity = Math.min(99, Math.max(1, Number(quantity) || 1));
+  const numeric = Number(quantity);
+  const safeQuantity = Number.isFinite(numeric) ? Math.min(99, Math.max(1, Math.trunc(numeric))) : 1;
   control.querySelector('output').textContent = String(safeQuantity);
   control.querySelector('[data-quantity-action="decrease"]').disabled = safeQuantity === 1;
   control.querySelector('[data-quantity-action="increase"]').disabled = safeQuantity === 99;
   return safeQuantity;
 }
 
-function productOrderMessage(name, quantity) {
-  return `Bonjour Juff Coffee 👋\nJe souhaite commander :\n\nProduit : ${name}\nQuantité : ${quantity}\n\nMerci.`;
+function cartElement(tag, className, text) {
+  const element = document.createElement(tag);
+  if (className) element.className = className;
+  if (text !== undefined) element.textContent = text;
+  return element;
 }
 
-function offerOrderMessage(offer, card) {
-  const quantity = quantityFrom(card.querySelector('[data-quantity-control]'));
-  const content = offer.fixedItems.map(item => `• ${item}`);
-  card.querySelectorAll('[data-choice-key]').forEach((select) => {
-    content.push(`• ${select.dataset.choiceKey} : ${select.value}`);
+function renderCart(focusId, focusAction) {
+  const fragment = document.createDocumentFragment();
+  orderCart.items.forEach((item) => {
+    const row = cartElement('li', 'cart-item');
+    row.dataset.cartId = item.id;
+    row.append(cartElement('h3', '', item.name));
+    row.append(cartElement('p', 'cart-item-value', item.kind === 'product' ? `${item.type} — ${item.displayValue}` : `Prix : ${item.displayValue}`));
+    if (item.kind === 'offer') {
+      row.append(cartElement('p', 'cart-item-options', [...item.content, ...Object.entries(item.options).map(([key, value]) => `${key} : ${value}`)].join(' · ')));
+    }
+    const actions = cartElement('div', 'cart-item-actions');
+    const quantity = cartElement('div', 'quantity-stepper');
+    quantity.setAttribute('role', 'group');
+    quantity.setAttribute('aria-label', `Quantité pour ${item.name}${item.type ? `, ${item.type}` : ''}`);
+    for (const action of ['decrease', 'increase']) {
+      if (action === 'increase') quantity.append(cartElement('output', '', String(item.quantity)));
+      const button = cartElement('button', '', action === 'decrease' ? '−' : '+');
+      button.type = 'button';
+      button.dataset.cartAction = action;
+      button.setAttribute('aria-label', action === 'decrease' ? 'Diminuer la quantité' : 'Augmenter la quantité');
+      button.disabled = action === 'decrease' ? item.quantity === 1 : item.quantity === 99;
+      quantity.append(button);
+    }
+    const remove = cartElement('button', 'cart-remove', 'Supprimer');
+    remove.type = 'button';
+    remove.dataset.cartAction = 'remove';
+    remove.setAttribute('aria-label', `Retirer ${item.name} de la commande`);
+    actions.append(quantity, remove);
+    row.append(actions);
+    fragment.append(row);
   });
-  return `Bonjour Juff Coffee 👋\nJe souhaite commander cette offre :\n\nFormule : ${offer.name}\nPrix : ${offer.price} MAD\nQuantité : ${quantity}\n\nContenu :\n${content.join('\n')}\n\nMerci.`;
+  cartItems.replaceChildren(fragment);
+  document.querySelector('.cart-count').textContent = String(orderCart.count);
+  document.querySelector('.cart-empty').hidden = orderCart.items.length > 0;
+  document.querySelector('.cart-clear').disabled = !orderCart.items.length;
+  orderDialogLink.disabled = !orderCart.items.length;
+  if (focusId) {
+    const row = [...cartItems.children].find(item => item.dataset.cartId === focusId);
+    const next = row?.querySelector(`[data-cart-action="${focusAction}"]:not(:disabled)`)
+      || row?.querySelector('.cart-remove') || cartItems.querySelector('.cart-remove')
+      || orderDialog.querySelector('.order-dialog-close');
+    next.focus({ preventScroll: true });
+  }
 }
 
-function updateOfferOrderLink(card) {
-  const offer = OFFERS[Number(card.dataset.offerIndex)];
-  if (!offer) return;
-  card.querySelector('.offer-order-button').href = whatsappOrderUrl(offerOrderMessage(offer, card));
+function saveCart(focusId, focusAction) {
+  try { localStorage.setItem(CART_STORAGE_KEY, orderCart.serialize()); }
+  catch { document.querySelector('.cart-storage-note').hidden = false; }
+  renderCart(focusId, focusAction);
 }
 
-function updateProductOrderLink() {
-  const quantity = quantityFrom(orderDialog.querySelector('[data-quantity-control]'));
-  orderDialogLink.href = whatsappOrderUrl(productOrderMessage(activeProductName, quantity));
-  orderDialogLink.setAttribute('aria-label', `Commander ${activeProductName}, quantité ${quantity}, sur WhatsApp`);
-}
-
-function openProductOrder(name) {
-  activeProductName = name;
-  orderDialogTitle.textContent = name;
-  setQuantity(orderDialog.querySelector('[data-quantity-control]'), 1);
-  updateProductOrderLink();
-  if (!orderDialog.open) orderDialog.showModal();
+function showOrderFeedback(card, message, invalid = false) {
+  const feedback = card.querySelector('.product-order-feedback, .offer-order-feedback');
+  feedback.textContent = message;
+  feedback.hidden = false;
+  feedback.classList.toggle('is-error', invalid);
 }
 
 // Render once: textContent keeps menu copy separate from markup and styles.
@@ -298,7 +336,7 @@ categoryTabs.forEach((tab) => {
   if (tab.dataset.category === 'Offres') return;
   const panel = document.getElementById(tab.getAttribute('aria-controls'));
   const fragment = document.createDocumentFragment();
-  MENU_PRODUCTS[tab.dataset.category].forEach((product) => {
+  MENU_PRODUCTS[tab.dataset.category].forEach((product, productIndex) => {
     const card = cardTemplate.content.cloneNode(true);
     card.querySelector('.product-name').textContent = product.name;
     card.querySelector('.price-amount').textContent = priceFormat.format(product.rp);
@@ -324,8 +362,22 @@ categoryTabs.forEach((tab) => {
       placeholder.hidden = true;
     }
     const orderButton = card.querySelector('[data-product-order]');
-    orderButton.dataset.orderName = product.name;
-    orderButton.setAttribute('aria-label', `Commander ${product.name} sur WhatsApp`);
+    card.querySelector('.product-card').dataset.productId = `${tab.dataset.category}:${product.name}`;
+    orderButton.setAttribute('aria-label', `Ajouter ${product.name} à la commande`);
+    const typeSelect = card.querySelector('.product-type');
+    typeSelect.id = `product-${tab.dataset.category}-${productIndex}-type`;
+    card.querySelector('.product-type-label').htmlFor = typeSelect.id;
+    typeSelect.setAttribute('aria-label', `Type pour ${product.name}`);
+    const feedback = card.querySelector('.product-order-feedback');
+    feedback.id = `${typeSelect.id}-feedback`;
+    typeSelect.setAttribute('aria-describedby', feedback.id);
+    for (const type of ['DP', 'RP', 'SV', 'PV']) {
+      const value = product[type.toLowerCase()];
+      if (Number.isFinite(value)) typeSelect.add(new Option(`${type} — ${priceFormat.format(value)}${['DP', 'RP'].includes(type) ? ' MAD' : ''}`, type));
+    }
+    // RP's visual emphasis in the price list never supplies a selection.
+    typeSelect.value = '';
+    card.querySelector('[data-quantity-control]').setAttribute('aria-label', `Quantité pour ${product.name}`);
     fragment.append(card);
   });
   panel.querySelector('.product-grid').append(fragment);
@@ -383,19 +435,56 @@ OFFERS.forEach((offer, offerIndex) => {
   quantityControl.setAttribute('aria-labelledby', quantityId);
 
   const orderLink = card.querySelector('.offer-order-button');
-  orderLink.setAttribute('aria-label', `Commander la ${offer.name} sur WhatsApp`);
-  updateOfferOrderLink(article);
+  orderLink.setAttribute('aria-label', `Ajouter ${offer.name} à la commande`);
   offersFragment.append(card);
 });
 
 offersGrid.append(offersFragment);
 
 document.querySelectorAll('[data-quantity-control]').forEach(control => setQuantity(control, 1));
+renderCart();
+cartToggle.hidden = false;
+cartToggle.addEventListener('click', () => orderDialog.showModal());
+orderDialogLink.addEventListener('click', () => {
+  if (orderCart.items.length) window.open(whatsappOrderUrl(orderCart.message()), '_blank', 'noopener,noreferrer');
+});
+document.querySelector('.cart-clear').addEventListener('click', () => {
+  orderCart.clear();
+  saveCart();
+  cartStatus.textContent = 'Votre commande est vide.';
+  orderDialog.querySelector('.order-dialog-close').focus();
+});
 
 menuSection.addEventListener('click', (event) => {
   const productOrderButton = event.target.closest('[data-product-order]');
   if (productOrderButton) {
-    openProductOrder(productOrderButton.dataset.orderName);
+    const card = productOrderButton.closest('.product-card');
+    const select = card.querySelector('.product-type');
+    try {
+      orderCart.addProduct(card.dataset.productId, select.value, quantityFrom(card.querySelector('[data-quantity-control]')));
+      saveCart();
+      select.removeAttribute('aria-invalid');
+      select.value = '';
+      setQuantity(card.querySelector('[data-quantity-control]'), 1);
+      showOrderFeedback(card, 'Ajouté à la commande.');
+      cartStatus.textContent = `${orderCart.count} article(s) dans votre commande.`;
+    } catch (error) {
+      showOrderFeedback(card, error.message, true);
+      if (!select.value) { select.setAttribute('aria-invalid', 'true'); select.focus(); }
+    }
+    return;
+  }
+  const offerButton = event.target.closest('.offer-order-button');
+  if (offerButton) {
+    const card = offerButton.closest('.offer-card');
+    const offer = OFFERS[Number(card.dataset.offerIndex)];
+    const options = Object.fromEntries([...card.querySelectorAll('[data-choice-key]')].map(select => [select.dataset.choiceKey, select.value]));
+    try {
+      orderCart.addOffer(offer.id, options, quantityFrom(card.querySelector('[data-quantity-control]')));
+      saveCart();
+      showOrderFeedback(card, 'Ajouté à la commande.');
+      cartStatus.textContent = `${orderCart.count} article(s) dans votre commande.`;
+    } catch (error) { showOrderFeedback(card, error.message, true); }
     return;
   }
 
@@ -404,22 +493,25 @@ menuSection.addEventListener('click', (event) => {
   const control = quantityButton.closest('[data-quantity-control]');
   const change = quantityButton.dataset.quantityAction === 'increase' ? 1 : -1;
   setQuantity(control, quantityFrom(control) + change);
-  const offerCard = quantityButton.closest('.offer-card');
-  if (offerCard) updateOfferOrderLink(offerCard);
 });
 
 menuSection.addEventListener('change', (event) => {
-  const offerCard = event.target.closest('.offer-card');
-  if (offerCard && event.target.matches('[data-choice-key]')) updateOfferOrderLink(offerCard);
+  if (event.target.matches('.product-type')) {
+    event.target.removeAttribute('aria-invalid');
+    event.target.closest('.product-card').querySelector('.product-order-feedback').hidden = true;
+  }
 });
 
 orderDialog.addEventListener('click', (event) => {
-  const quantityButton = event.target.closest('[data-quantity-action]');
-  if (quantityButton) {
-    const control = quantityButton.closest('[data-quantity-control]');
-    const change = quantityButton.dataset.quantityAction === 'increase' ? 1 : -1;
-    setQuantity(control, quantityFrom(control) + change);
-    updateProductOrderLink();
+  const actionButton = event.target.closest('[data-cart-action]');
+  if (actionButton) {
+    const id = actionButton.closest('.cart-item').dataset.cartId;
+    const action = actionButton.dataset.cartAction;
+    const item = orderCart.items.find(item => item.id === id);
+    if (action === 'remove') orderCart.remove(id);
+    else orderCart.changeQuantity(id, item.quantity + (action === 'increase' ? 1 : -1));
+    saveCart(id, action);
+    cartStatus.textContent = `${orderCart.count} article(s) dans votre commande.`;
     return;
   }
   if (event.target.closest('.order-dialog-close')) {
