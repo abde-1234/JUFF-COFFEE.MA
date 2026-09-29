@@ -124,7 +124,7 @@ main { display: flex; flex-direction: column; }
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--color-line-soft);
 }
-.brand { display: inline-flex; align-items: center; gap: 9px; margin-right: auto; min-height: 44px; }
+.brand { display: inline-flex; align-items: center; gap: 9px; margin-inline-end: auto; min-height: 44px; }
 .brand-mark { width: 42px; height: 42px; }
 .brand-type { font-family: var(--font-script); font-size: 22px; line-height: 1; color: var(--color-brown-2); letter-spacing: 0; }
 .brand-type > span { display: block; font-family: var(--font-ui); font-size: 6px; font-weight: 700; letter-spacing: 1.6px; margin-top: 4px; color: var(--color-muted); }
@@ -246,7 +246,7 @@ main { display: flex; flex-direction: column; }
   font-weight: 800;
   letter-spacing: 2px;
 }
-.eyebrow > span { width: 24px; height: 1px; background: var(--color-brown-3); opacity: .7; }
+.eyebrow > span:not(.i18n-text) { width: 24px; height: 1px; background: var(--color-brown-3); opacity: .7; }
 h1 {
   margin: 0 0 8px;
   font-family: var(--font-script);
@@ -353,7 +353,7 @@ h1 {
 .moment { display: flex; align-items: center; gap: 14px; }
 .moment > .icon { width: 26px; height: 26px; color: var(--color-brown-3); stroke-width: 1.3; flex: 0 0 auto; }
 .moment > div { font-family: var(--font-display); font-size: 15px; color: var(--color-text); }
-.moment span { display: block; font-family: var(--font-ui); color: var(--color-muted); font-size: 11px; margin-top: 3px; }
+.moment span:not(.i18n-text) { display: block; font-family: var(--font-ui); color: var(--color-muted); font-size: 11px; margin-top: 3px; }
 
 /* ---------- 08 · Menu section ---------- */
 .menu-section {
@@ -571,7 +571,7 @@ h1 {
 }
 .experience-copy { padding: 2px 2px 6px; }
 .experience-copy .eyebrow { color: #d9c6a8; justify-content: flex-start; }
-.experience-copy .eyebrow > span { background: #d9c6a8; }
+.experience-copy .eyebrow > span:not(.i18n-text) { background: #d9c6a8; }
 .experience-copy h2, .featured-heading h2 {
   margin: 0; font-family: var(--font-display);
   font-size: clamp(30px, 7vw, 44px); font-weight: 700;
@@ -653,9 +653,9 @@ h1 {
 .offer-price strong { font-family: var(--font-display); font-size: 25px; line-height: 1; }
 .offer-price span { font-size: 10px; font-weight: 800; }
 .offer-items { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; color: #392219; font-size: 12.5px; line-height: 1.45; }
-.offer-items li { position: relative; padding-left: 18px; }
+.offer-items li { position: relative; padding-inline-start: 18px; }
 .offer-items li::before {
-  content: ''; position: absolute; left: 1px; top: .45em;
+  content: ''; position: absolute; inset-inline-start: 1px; top: .45em;
   width: 7px; height: 7px; border-radius: 50%;
   background: var(--color-leaf); box-shadow: 0 0 0 3px rgba(71, 101, 45, .14);
 }
@@ -706,7 +706,7 @@ h1 {
 .contact-card > .icon { width: 34px; height: 34px; }
 .contact-card span { font-size: 15px; font-weight: 800; line-height: 1.2; overflow-wrap: anywhere; }
 .contact-card small { display: block; margin-bottom: 3px; font-size: 9px; font-weight: 600; opacity: .85; }
-.contact-card b { margin-left: auto; font-size: 22px; font-weight: 300; opacity: .8; }
+.contact-card b { margin-inline-start: auto; font-size: 22px; font-weight: 300; opacity: .8; }
 .contact-whatsapp { background: var(--color-wa); }
 .contact-facebook { background: #1a5fb4; }
 .contact-card:hover { filter: brightness(1.06); transform: translateY(-1px); }
@@ -759,7 +759,7 @@ body:has(dialog[open]) { overflow: hidden; }
 .cart-toggle { position: fixed; z-index: 30; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; justify-content: center; gap: 12px; max-width: calc(100% - 32px); min-height: 48px; padding: 10px 18px; border: 1px solid var(--color-cream-2); border-radius: 14px; background: var(--color-brown-2); color: var(--color-surface); font: 800 13px var(--font-ui); box-shadow: var(--shadow-lift); }
 .cart-count { display: grid; place-items: center; min-width: 28px; min-height: 28px; padding: 0 6px; background: var(--color-cream-2); color: var(--color-brown-2); border-radius: 999px; }
 .js .site-shell { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
-.cart-dialog[open] { display: flex; flex-direction: column; gap: 10px; width: min(520px, calc(100% - 24px)); max-height: calc(100dvh - 24px); padding: 24px 16px 16px; }
+.cart-dialog[open] { position: fixed; inset: 0; display: flex; flex-direction: column; gap: 10px; width: min(520px, calc(100% - 24px)); max-height: calc(100dvh - 24px); padding: 24px 16px 16px; }
 .cart-dialog > img { width: 32px; height: 32px; margin-bottom: 0; flex-shrink: 0; }
 .cart-items { margin: 4px 0; padding: 0; list-style: none; overflow-y: auto; min-height: 0; overscroll-behavior: contain; }
 .cart-item { padding: 14px 2px; border-bottom: 1px solid var(--color-line); }
@@ -833,7 +833,7 @@ body:has(dialog[open]) { overflow: hidden; }
   .navigation { gap: 4px; }
   .header-note { display: inline-flex; }
   .hero { grid-template-columns: 1fr 1fr; gap: 32px; padding: 56px 40px 60px; }
-  .hero-copy { text-align: left; }
+  .hero-copy { text-align: start; }
   .hero-copy .eyebrow, .social-links { justify-content: flex-start; }
   .hero-logo { margin: 0 0 14px; width: 92px; height: 92px; }
   h1 { font-family: var(--font-display); font-weight: 700; letter-spacing: -1.5px; font-size: clamp(52px, 6.5vw, 84px); }
@@ -843,7 +843,7 @@ body:has(dialog[open]) { overflow: hidden; }
   .round-stamp { width: 92px; height: 92px; top: 18px; right: 14px; }
   .photo-note { left: -14px; }
   .moments { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; padding: 26px 40px; }
-  .moment + .moment { border-left: 1px solid var(--color-line-soft); padding-left: 24px; }
+  .moment + .moment { border-inline-start: 1px solid var(--color-line-soft); padding-inline-start: 24px; }
   .menu-section { padding: 36px 40px 70px; }
   .menu-filters { justify-content: center; width: min(100%, 560px); overflow: visible; }
   .category-tab { flex: 1 1 0; min-width: 0; font-size: 12.5px; }
@@ -857,7 +857,7 @@ body:has(dialog[open]) { overflow: hidden; }
   .experience-media { aspect-ratio: 3 / 4; max-height: 560px; }
   .featured-section { padding: 48px 40px 16px; }
   .featured-heading { grid-template-columns: 1fr auto; align-items: end; }
-  .featured-heading > p { text-align: right; }
+  .featured-heading > p { text-align: end; }
   .featured-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
   .contact-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 34px 40px 28px; }
   .site-footer { padding: 18px 40px 24px; }
@@ -880,4 +880,72 @@ body:has(dialog[open]) { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+
+/* Language controls and bidirectional text. Prices and metric codes keep their
+   original notation; all other flow follows the document direction. */
+.language-switcher { display: inline-flex; flex-shrink: 0; direction: ltr; gap: 2px; padding: 3px; border: 1px solid var(--color-line); border-radius: 10px; background: var(--color-cream-2); }
+.language-switcher button { min-width: 32px; min-height: 36px; padding: 4px 6px; border: 0; border-radius: 7px; background: transparent; font-size: 12px; font-weight: 700; }
+.language-switcher button[aria-pressed="true"] { background: var(--color-brown-2); color: var(--color-surface); }
+.hero-slogan { white-space: normal; }
+.product-pricing, .product-type, .quantity-stepper, .offer-price { direction: ltr; }
+.product-type option[value=""] { direction: inherit; }
+.i18n-text { font: inherit; color: inherit; }
+[dir="rtl"] { --font-display: 'Segoe UI', Tahoma, Arial, sans-serif; }
+[dir="rtl"] .eyebrow, [dir="rtl"] .hero-slogan, [dir="rtl"] .brand-type > span,
+[dir="rtl"] .social-label, [dir="rtl"] .visual-index, [dir="rtl"] .round-stamp { letter-spacing: 0; }
+[dir="rtl"] .hero-copy { line-height: 1.8; }
+[dir="rtl"] .product-type { text-align: right; }
+[dir="rtl"] .button .icon, [dir="rtl"] .small-arrow, [dir="rtl"] .featured-card button > span[aria-hidden],
+[dir="rtl"] .contact-card b { transform: scaleX(-1); }
+[dir="rtl"] .dialog-close, [dir="rtl"] .order-dialog-close { right: auto; left: 6px; }
+[dir="rtl"] .cart-toggle { right: auto; left: 16px; }
+[dir="rtl"] .offer-header, [dir="rtl"] .offer-content, [dir="rtl"] .cart-item { text-align: start; }
+@media (max-width: 759px) {
+  .site-header { gap: 6px; padding-inline: 10px; }
+  .brand { gap: 6px; min-width: 0; }
+  .brand-type > span { font-size: 5px; letter-spacing: .6px; }
+  .language-switcher { margin-inline-start: auto; }
+  .nav-toggle { flex-shrink: 0; }
+  [dir="rtl"] .js .nav-link.is-active::after { right: auto; left: 14px; }
+}
+@media (min-width: 760px) and (max-width: 1199px) {
+  .site-header { gap: 8px; padding-inline: 16px; flex-wrap: wrap; }
+  .navigation { margin-inline-start: auto; }
+  .header-note { display: none; }
+  .nav-link { padding-inline: 8px; }
+}
+
+/* ---------- 19 · Professional bilingual typography (FR + AR) ---------- */
+/* Balanced headlines keep the same premium rhythm in both languages. */
+h1, h2, .menu-category-title, .offer-name, .featured-card h3,
+.info-dialog h2, .order-dialog h2 { text-wrap: balance; }
+
+/* Arabic script must never be letter-spaced: tracking breaks cursive
+   joining and looks amateur. Zero it everywhere in RTL mode. */
+[dir="rtl"] body, [dir="rtl"] body * { letter-spacing: 0; }
+
+/* Arabic glyphs read smaller and need more air: roomier body leading,
+   larger micro-labels, taller small caps. French rendering is untouched. */
+[dir="rtl"] body { line-height: 1.8; }
+[dir="rtl"] .brand-type > span { font-size: 8px; }
+[dir="rtl"] .eyebrow { font-size: 10px; }
+[dir="rtl"] .social-label { font-size: 10px; }
+[dir="rtl"] .coffee-photo figcaption { font-size: 8px; line-height: 1.8; }
+[dir="rtl"] .round-stamp span { font-size: 9px; line-height: 1.6; }
+[dir="rtl"] .product-placeholder > span { font-size: 9.5px; }
+[dir="rtl"] .visual-index { font-size: 8px; }
+[dir="rtl"] .experience-caption { font-size: 10px; }
+[dir="rtl"] .offer-badge { font-size: 10px; }
+[dir="rtl"] .menu-preview-note { font-size: 11px; line-height: 1.9; }
+[dir="rtl"] .contact-card small { font-size: 9.5px; }
+[dir="rtl"] .offers-intro { line-height: 1.9; }
+[dir="rtl"] .offer-note { line-height: 1.8; }
+
+/* No synthetic italics for Arabic: oblique Arabic looks broken. */
+[dir="rtl"] .offer-subtitle, [dir="rtl"] .offer-note { font-style: normal; }
+
+@media (max-width: 759px) {
+  [dir="rtl"] .brand-type > span { font-size: 6.5px; }
 }

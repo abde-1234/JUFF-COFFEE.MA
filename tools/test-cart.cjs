@@ -11,7 +11,7 @@ const coffee = 'Beverages:CORDYCEPS COFFEE';
 const maki = 'Sushi:MAKI — 6 PIECES';
 
 for (const type of ['', undefined, null, 'rp', 'UNKNOWN']) {
-  assert.throws(() => cart.addProduct(kiwi, type, 1), /Choisissez un type/);
+  assert.throws(() => cart.addProduct(kiwi, type, 1), /Veuillez choisir un type/);
   assert.equal(cart.count, 0);
 }
 for (const quantity of [0, -1, NaN, Infinity, 1.5, '2', 100]) {
@@ -42,6 +42,11 @@ cart.addProduct(kiwi, 'PV', 1);
 assert.equal(cart.items.at(-2).displayValue, '6,20');
 assert.equal(cart.items.at(-1).displayValue, '1,00');
 assert.ok(!cart.message().includes('Total'));
+const capped = new Cart(MENU_PRODUCTS, OFFERS);
+capped.addProduct(kiwi, 'RP', 99);
+assert.throws(() => capped.addProduct(kiwi, 'RP', 1));
+assert.throws(() => capped.changeQuantity(capped.items[0].id, 0));
+assert.equal(capped.count, 99);
 cart.addOffer('formule-gourmand', { Café: 'Cordyceps', Crêpe: 'Fruits' }, 1);
 assert.equal(cart.items.filter(item => item.kind === 'offer').length, 2);
 assert.throws(() => cart.addOffer('formule-gourmand', {}, 1));
@@ -68,3 +73,31 @@ restored.clear();
 assert.equal(restored.message(), '');
 assert.equal(restored.count, 0);
 console.log('PASS: explicit type required, 224 exact values, mixed orders, options, units, quantities, merging, persistence, corrupt storage, all 8 offers.');
+
+// A locale change must affect display/message copy without changing order data.
+const bilingual = new Cart(MENU_PRODUCTS, OFFERS);
+bilingual.addProduct(kiwi, 'SV', 2);
+bilingual.addOffer('formule-gourmand', { Café: 'Lion’s Mane', Crêpe: 'Nutella' }, 1);
+const saved = bilingual.serialize();
+const french = bilingual.message();
+bilingual.setLanguage('ar');
+assert.equal(bilingual.serialize(), saved);
+assert.equal(bilingual.message(), 'مرحبًا جوف كوفي 👋\n\nأرغب في تقديم الطلب التالي:\n\n1. KIWI JUICE\nالنوع : SV\nالقيمة : 6,20\nالكمية : 2\n\n2. عرض الذوّاقة\nالسعر : 50 MAD\n• عصير Roselle\nالقهوة : Lion’s Mane\nالكريب : نوتيلا\nالكمية : 1\n\nشكرًا.');
+assert.throws(() => bilingual.addProduct(kiwi, '', 1), /يرجى اختيار النوع/);
+assert.throws(() => bilingual.addProduct(kiwi, 'RP', 100), /يرجى اختيار كمية/);
+assert.throws(() => bilingual.addOffer('missing', {}, 1), /هذا العرض غير متاح/);
+assert.throws(() => bilingual.addOffer('formule-gourmand', {}, 1), /خيارات القهوة/);
+assert.equal(bilingual.serialize(), saved);
+bilingual.setLanguage('fr');
+assert.equal(bilingual.message(), french);
+bilingual.setLanguage('unsupported');
+assert.equal(bilingual.language, 'fr');
+const { fr, ar } = Cart.translations;
+assert.deepEqual(Object.keys(fr).sort(), Object.keys(ar).sort());
+assert.deepEqual(Object.keys(fr.offer_text).sort(), Object.keys(ar.offer_text).sort());
+const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+for (const [, key] of html.matchAll(/data-i18n(?:-aria|-alt)?="([^"]+)"/g)) {
+  assert.equal(typeof fr[key], 'string', `Missing French translation: ${key}`);
+  assert.equal(typeof ar[key], 'string', `Missing Arabic translation: ${key}`);
+}
+console.log('PASS: Arabic checkout, localized validation, dictionary completeness, language fallback and unchanged serialized order.');

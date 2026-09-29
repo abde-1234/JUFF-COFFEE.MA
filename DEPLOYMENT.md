@@ -1,5 +1,7 @@
 # Juff Coffee deployment audit
 
+This is the pre-cart deployment baseline. The newer multi-product cart changes and production-browser verification are recorded in [CART-VERIFICATION.md](CART-VERIFICATION.md); the current build contains 85 files. Counts and screenshots below describe the earlier baseline.
+
 Final status: **READY FOR DEPLOYMENT**
 
 Production URL: https://juff-coffee-mia.vercel.app/

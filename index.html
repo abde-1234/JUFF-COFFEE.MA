@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" dir="ltr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,7 +7,7 @@
   <meta name="color-scheme" content="light">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta name="description" content="Découvrez le menu Juff Coffee : cafés, thés, boissons fraîches, petite restauration et sushis dans une ambiance chaleureuse.">
-  <title>Juff Coffee | Café &amp; Restaurant</title>
+  <title data-i18n="page_title">Juff Coffee | Café &amp; Restaurant</title>
   <!-- Replace relative canonical/social URLs with absolute HTTPS URLs when the production domain is confirmed. -->
   <link rel="canonical" href="./">
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
@@ -57,8 +57,8 @@
         "@id": "./#menu",
         "name": "Menu Juff Coffee",
         "hasMenuSection": [
-          { "@type": "MenuSection", "name": "Beverages" },
-          { "@type": "MenuSection", "name": "Food" },
+          { "@type": "MenuSection", "name": "Boissons" },
+          { "@type": "MenuSection", "name": "Restauration" },
           { "@type": "MenuSection", "name": "Sushi" },
           { "@type": "MenuSection", "name": "Offres" }
         ]
@@ -67,7 +67,7 @@
   </script>
 </head>
 <body>
-  <a class="skip-link" href="#home">Aller au contenu</a>
+  <a class="skip-link" href="#home" data-i18n="skip_content">Aller au contenu</a>
   <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
     <symbol id="icon-leaf" viewBox="0 0 24 24"><path d="M19 4C8 2 3 8 6 15c7 4 14-1 13-11Z M4 21 15 9 M8 17v-6m0 6h6"/></symbol>
@@ -84,38 +84,42 @@
 
   <div class="site-shell">
     <header class="site-header">
-      <a class="brand" href="#home" aria-label="Juff Coffee — Accueil">
+      <a class="brand" href="#home" aria-label="Juff Coffee — Accueil" data-i18n-aria="brand_home">
         <img class="brand-mark" src="assets/logo.svg" width="56" height="56" alt="">
-        <span class="brand-type">Juff Coffee<span>GOOD COFFEE · GOOD MOOD</span></span>
+        <span class="brand-type">Juff Coffee<span data-i18n="brand_slogan">BON CAFÉ · BONNE HUMEUR</span></span>
       </a>
+      <div class="language-switcher" role="group" aria-label="Langue du site" data-i18n-aria="language_label" hidden>
+        <button type="button" data-language="fr" lang="fr" aria-label="Français" aria-pressed="true">FR</button>
+        <button type="button" data-language="ar" lang="ar" aria-label="العربية" aria-pressed="false">AR</button>
+      </div>
       <button class="nav-toggle" type="button" aria-controls="main-navigation" aria-expanded="false" aria-label="Ouvrir la navigation" hidden>
         <span></span><span></span><span></span>
       </button>
-      <nav class="navigation" id="main-navigation" aria-label="Navigation principale">
-        <a class="nav-link is-active" href="#home" aria-current="page">Home</a>
-        <button class="nav-link" type="button" data-menu="Beverages">Beverages</button>
-        <button class="nav-link" type="button" data-menu="Food">Food</button>
-        <button class="nav-link" type="button" data-menu="Sushi">Sushi</button>
-        <button class="nav-link" type="button" data-menu="Offres">Offres</button>
-        <button class="nav-link" type="button" data-contact>Contact</button>
+      <nav class="navigation" id="main-navigation" aria-label="Navigation principale" data-i18n-aria="nav_label">
+        <a class="nav-link is-active" href="#home" aria-current="page" data-i18n="nav_home">Accueil</a>
+        <button class="nav-link" type="button" data-menu="Beverages" data-i18n="nav_beverages">Boissons</button>
+        <button class="nav-link" type="button" data-menu="Food" data-i18n="nav_food">Restauration</button>
+        <button class="nav-link" type="button" data-menu="Sushi" data-i18n="nav_sushi">Sushi</button>
+        <button class="nav-link" type="button" data-menu="Offres" data-i18n="nav_offers">Offres</button>
+        <button class="nav-link" type="button" data-contact data-i18n="nav_contact">Contact</button>
       </nav>
-      <span class="header-note"><span class="status-dot"></span>Une pause, un sourire.</span>
+      <span class="header-note"><span class="status-dot"></span><span class="i18n-text" data-i18n="top_tagline">Une pause, un sourire.</span></span>
     </header>
 
     <main id="home">
       <section class="hero" aria-labelledby="hero-title">
         <div class="hero-copy">
           <img class="hero-logo" src="assets/logo.svg" width="112" height="112" alt="">
-          <p class="eyebrow"><span></span> VOTRE PETITE PAUSE BONHEUR</p>
-          <h1 id="hero-title">Juff Coffee<span class="title-dot">.</span></h1>
-          <p class="hero-slogan">GOOD COFFEE <em>•</em> GOOD MOOD</p>
-          <p class="hero-description">Un bon café, un instant pour soi.<br>Installez-vous, savourez… et prenez le temps.</p>
-          <button class="button button-primary" type="button" data-menu="all">Voir le menu <svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></button>
+          <p class="eyebrow"><span></span> <span class="i18n-text" data-i18n="hero_badge">VOTRE PETITE PAUSE BONHEUR</span></p>
+          <h1 id="hero-title" dir="ltr">Juff Coffee<span class="title-dot">.</span></h1>
+          <p class="hero-slogan"><span class="i18n-text" data-i18n="hero_coffee">BON CAFÉ</span> <em>•</em> <span class="i18n-text" data-i18n="hero_mood">BONNE HUMEUR</span></p>
+          <p class="hero-description"><span class="i18n-text" data-i18n="hero_text_1">Un bon café, un instant pour soi.</span><br><span class="i18n-text" data-i18n="hero_text_2">Installez-vous, savourez… et prenez le temps.</span></p>
+          <button class="button button-primary" type="button" data-menu="all"><span class="i18n-text" data-i18n="hero_cta">Voir le menu</span> <svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></button>
           <div class="social-block">
-            <span class="social-label">ON GARDE LE CONTACT ?</span>
+            <span class="social-label" data-i18n="contact_title">ON GARDE LE CONTACT ?</span>
             <div class="social-links">
-              <a class="social-button whatsapp" href="https://wa.me/212631139014" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp (nouvel onglet)" data-social="whatsapp"><svg class="icon" aria-hidden="true"><use href="#icon-whatsapp"/></svg>WhatsApp<svg class="icon small-arrow" aria-hidden="true"><use href="#icon-arrow"/></svg></a>
-              <a class="social-button facebook" href="https://www.facebook.com/share/1C9qgVSaXs/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" aria-label="Facebook (nouvel onglet)" data-social="facebook"><svg class="icon" aria-hidden="true"><use href="#icon-facebook"/></svg>Facebook<svg class="icon small-arrow" aria-hidden="true"><use href="#icon-arrow"/></svg></a>
+              <a class="social-button whatsapp" href="https://wa.me/212631139014" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp (nouvel onglet)" data-social="whatsapp"><svg class="icon" aria-hidden="true"><use href="#icon-whatsapp"/></svg><span class="i18n-text" data-i18n="whatsapp">WhatsApp</span><svg class="icon small-arrow" aria-hidden="true"><use href="#icon-arrow"/></svg></a>
+              <a class="social-button facebook" href="https://www.facebook.com/share/1C9qgVSaXs/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" aria-label="Facebook (nouvel onglet)" data-social="facebook"><svg class="icon" aria-hidden="true"><use href="#icon-facebook"/></svg><span class="i18n-text" data-i18n="facebook">Facebook</span><svg class="icon small-arrow" aria-hidden="true"><use href="#icon-arrow"/></svg></a>
             </div>
           </div>
         </div>
@@ -125,59 +129,59 @@
           <figure class="coffee-photo">
             <picture>
               <source media="(max-width: 600px)" srcset="images/hero/juff-iced-coffee-560.webp">
-              <img src="images/hero/juff-iced-coffee-1000.webp" alt="Grand café glacé crémeux servi dans un gobelet portant le logo Juff Coffee, dans une ambiance de café chaleureuse." width="941" height="1672" fetchpriority="high" decoding="async">
+              <img src="images/hero/juff-iced-coffee-1000.webp" alt="Grand café glacé crémeux servi dans un gobelet portant le logo Juff Coffee, dans une ambiance de café chaleureuse." data-i18n-alt="hero_alt" width="941" height="1672" fetchpriority="high" decoding="async">
             </picture>
-            <figcaption><span class="caption-dot"></span>UN PEU DE FRAÎCHEUR. BEAUCOUP DE BONHEUR.</figcaption>
+            <figcaption><span class="caption-dot"></span><span class="i18n-text" data-i18n="photo_caption">UN PEU DE FRAÎCHEUR. BEAUCOUP DE BONHEUR.</span></figcaption>
           </figure>
-          <div class="round-stamp" aria-hidden="true"><span>TAKE A BREAK</span><svg class="icon"><use href="#icon-leaf"/></svg><span>TAKE A SIP</span></div>
-          <div class="photo-note"><span class="note-icon"><svg class="icon" aria-hidden="true"><use href="#icon-heart"/></svg></span><span>Votre moment préféré.<small>À savourer, tout simplement.</small></span></div>
-          <span class="visual-index" aria-hidden="true">01 / THE COFFEE MOMENT</span>
+          <div class="round-stamp" aria-hidden="true"><span data-i18n="stamp_break">UNE PAUSE</span><svg class="icon"><use href="#icon-leaf"/></svg><span data-i18n="stamp_sip">UNE GORGÉE</span></div>
+          <div class="photo-note"><span class="note-icon"><svg class="icon" aria-hidden="true"><use href="#icon-heart"/></svg></span><span><span class="i18n-text" data-i18n="photo_title">Votre moment préféré.</span><small data-i18n="photo_note">À savourer, tout simplement.</small></span></div>
+          <span class="visual-index" aria-hidden="true" data-i18n="visual_index">01 / LA PAUSE CAFÉ</span>
         </div>
       </section>
 
-      <section class="moments" aria-label="L’esprit Juff Coffee">
-        <div class="moment"><svg class="icon" aria-hidden="true"><use href="#icon-cup"/></svg><div>Le plaisir d’un bon café<span>La pause qui fait du bien.</span></div></div>
-        <div class="moment"><svg class="icon" aria-hidden="true"><use href="#icon-leaf"/></svg><div>Un instant pour ralentir<span>Prenez le temps de savourer.</span></div></div>
-        <div class="moment"><svg class="icon" aria-hidden="true"><use href="#icon-spark"/></svg><div>De beaux moments à partager<span>Seul, à deux, ou entre amis.</span></div></div>
+      <section class="moments" aria-label="L’esprit Juff Coffee" data-i18n-aria="moments_label">
+        <div class="moment"><svg class="icon" aria-hidden="true"><use href="#icon-cup"/></svg><div><span class="i18n-text" data-i18n="moment_1">Le plaisir d’un bon café</span><span data-i18n="moment_1_text">La pause qui fait du bien.</span></div></div>
+        <div class="moment"><svg class="icon" aria-hidden="true"><use href="#icon-leaf"/></svg><div><span class="i18n-text" data-i18n="moment_2">Un instant pour ralentir</span><span data-i18n="moment_2_text">Prenez le temps de savourer.</span></div></div>
+        <div class="moment"><svg class="icon" aria-hidden="true"><use href="#icon-spark"/></svg><div><span class="i18n-text" data-i18n="moment_3">De beaux moments à partager</span><span data-i18n="moment_3_text">Seul, à deux, ou entre amis.</span></div></div>
       </section>
 
       <section class="experience-section" aria-labelledby="experience-title">
         <div class="experience-media">
-          <video class="experience-video" id="experience-video" muted loop playsinline preload="none" poster="video/juff-coffee-poster.jpg" data-video-src="video/juff-coffee.mp4" aria-label="Découverte en vidéo de l’espace Juff Coffee"></video>
+          <video class="experience-video" id="experience-video" muted loop playsinline preload="none" poster="video/juff-coffee-poster.jpg" data-video-src="video/juff-coffee.mp4" aria-label="Découverte en vidéo de l’espace Juff Coffee" data-i18n-aria="video_label"></video>
           <button class="video-toggle" type="button" aria-controls="experience-video" aria-label="Lire la vidéo Juff Coffee" aria-pressed="false">
             <svg class="icon video-play-icon" aria-hidden="true"><use href="#icon-play"/></svg>
             <svg class="icon video-pause-icon" aria-hidden="true" hidden><use href="#icon-pause"/></svg>
           </button>
-          <span class="experience-caption">24 secondes · sans son</span>
+          <span class="experience-caption" data-i18n="video_caption">24 secondes · sans son</span>
         </div>
         <div class="experience-copy">
-          <p class="eyebrow"><span></span> L’EXPÉRIENCE JUFF COFFEE</p>
-          <h2 id="experience-title">Une pause qui se vit.</h2>
-          <p>Découvrez l’ambiance Juff Coffee, ses boissons préparées avec soin et un lieu pensé pour ralentir un instant.</p>
-          <button class="button button-light" type="button" data-menu="Beverages">Découvrir les boissons <svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></button>
+          <p class="eyebrow"><span></span> <span class="i18n-text" data-i18n="experience_badge">L’EXPÉRIENCE JUFF COFFEE</span></p>
+          <h2 id="experience-title" data-i18n="experience_title">Une pause qui se vit.</h2>
+          <p data-i18n="experience_text">Découvrez l’ambiance Juff Coffee, ses boissons préparées avec soin et un lieu pensé pour ralentir un instant.</p>
+          <button class="button button-light" type="button" data-menu="Beverages"><span class="i18n-text" data-i18n="discover_drinks">Découvrir les boissons</span> <svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></button>
         </div>
       </section>
 
       <section class="featured-section" aria-labelledby="featured-title">
         <header class="featured-heading">
           <div>
-            <p class="eyebrow"><span></span> SÉLECTION DU MOMENT</p>
-            <h2 id="featured-title">À découvrir chez Juff.</h2>
+            <p class="eyebrow"><span></span> <span class="i18n-text" data-i18n="featured_badge">SÉLECTION DU MOMENT</span></p>
+            <h2 id="featured-title" data-i18n="featured_title">À découvrir chez Juff.</h2>
           </div>
-          <p>Trois créations mises en lumière dans leurs visuels promotionnels d’origine.</p>
+          <p data-i18n="featured_text">Trois créations mises en lumière dans leurs visuels promotionnels d’origine.</p>
         </header>
         <div class="featured-grid">
           <article class="featured-card">
-            <img src="assets/discovery/kiwi-lime-juice.jpg" width="900" height="900" loading="lazy" decoding="async" alt="Grand verre de Kiwi Juice glacé avec rondelle de kiwi.">
-            <div><p>Fresh drink</p><h3>Kiwi Juice</h3><button type="button" data-menu="Beverages">Voir dans la carte <span aria-hidden="true">→</span></button></div>
+            <img src="assets/discovery/kiwi-lime-juice.jpg" width="900" height="900" loading="lazy" decoding="async" alt="Grand verre de Kiwi Juice glacé avec rondelle de kiwi." data-i18n-alt="kiwi_alt">
+            <div><p data-i18n="fresh_drink">Boisson fraîche</p><h3>Kiwi Juice</h3><button type="button" data-menu="Beverages"><span class="i18n-text" data-i18n="view_menu">Voir dans la carte</span> <span aria-hidden="true">→</span></button></div>
           </article>
           <article class="featured-card">
-            <img src="assets/discovery/mushroom-coffee.jpg" width="900" height="900" loading="lazy" decoding="async" alt="Tasse de Cordyceps Coffee crémeux avec grains de café.">
-            <div><p>Coffee pick</p><h3>Cordyceps Coffee</h3><button type="button" data-menu="Beverages">Voir dans la carte <span aria-hidden="true">→</span></button></div>
+            <img src="assets/discovery/mushroom-coffee.jpg" width="900" height="900" loading="lazy" decoding="async" alt="Tasse de Cordyceps Coffee crémeux avec grains de café." data-i18n-alt="coffee_alt">
+            <div><p data-i18n="coffee_pick">Notre sélection café</p><h3>Cordyceps Coffee</h3><button type="button" data-menu="Beverages"><span class="i18n-text" data-i18n="view_menu">Voir dans la carte</span> <span aria-hidden="true">→</span></button></div>
           </article>
           <article class="featured-card">
-            <img src="assets/discovery/maki-sushi.jpg" width="900" height="900" loading="lazy" decoding="async" alt="Assiette de six makis au saumon, avocat et concombre.">
-            <div><p>Sushi pick</p><h3>Maki · 6 pièces</h3><button type="button" data-menu="Sushi">Voir dans la carte <span aria-hidden="true">→</span></button></div>
+            <img src="assets/discovery/maki-sushi.jpg" width="900" height="900" loading="lazy" decoding="async" alt="Assiette de six makis au saumon, avocat et concombre." data-i18n-alt="maki_alt">
+            <div><p data-i18n="sushi_pick">Notre sélection sushi</p><h3 data-i18n="maki_featured">Maki · 6 pièces</h3><button type="button" data-menu="Sushi"><span class="i18n-text" data-i18n="view_menu">Voir dans la carte</span> <span aria-hidden="true">→</span></button></div>
           </article>
         </div>
       </section>
@@ -189,79 +193,79 @@
         </div>
         <header class="menu-heading">
           <div>
-            <p class="eyebrow"><span></span> À CHAQUE ENVIE, SA PAUSE</p>
-            <h2 id="menu-title" lang="en">Our Menu<span class="title-dot">.</span></h2>
+            <p class="eyebrow"><span></span> <span class="i18n-text" data-i18n="menu_badge">À CHAQUE ENVIE, SA PAUSE</span></p>
+            <h2 id="menu-title"><span class="i18n-text" data-i18n="menu_title">Notre menu</span><span class="title-dot">.</span></h2>
           </div>
-          <p>Un café, une petite faim, un moment à partager.<br>Choisissez votre prochaine pause.</p>
+          <p><span class="i18n-text" data-i18n="menu_text_1">Un café, une petite faim, un moment à partager.</span><br><span class="i18n-text" data-i18n="menu_text_2">Choisissez votre prochaine pause.</span></p>
         </header>
-        <p class="menu-preview-note">Prix de vente RP en MAD · Détails DP, SV et PV sur chaque produit.</p>
+        <p class="menu-preview-note" data-i18n="price_note" data-bidi-fix>Prix de vente RP en MAD · Détails DP, SV et PV sur chaque produit.</p>
 
-        <div class="menu-filters" role="tablist" aria-label="Catégories du menu" hidden>
-          <button class="category-tab" id="tab-beverages" type="button" role="tab" aria-selected="true" aria-controls="panel-beverages" tabindex="0" data-category="Beverages">Beverages</button>
-          <button class="category-tab" id="tab-food" type="button" role="tab" aria-selected="false" aria-controls="panel-food" tabindex="-1" data-category="Food">Food</button>
-          <button class="category-tab" id="tab-sushi" type="button" role="tab" aria-selected="false" aria-controls="panel-sushi" tabindex="-1" data-category="Sushi">Sushi</button>
-          <button class="category-tab" id="tab-offres" type="button" role="tab" aria-selected="false" aria-controls="panel-offres" tabindex="-1" data-category="Offres">Offres</button>
+        <div class="menu-filters" role="tablist" aria-label="Catégories du menu" data-i18n-aria="categories" hidden>
+          <button class="category-tab" id="tab-beverages" type="button" role="tab" aria-selected="true" aria-controls="panel-beverages" tabindex="0" data-category="Beverages" data-i18n="nav_beverages">Boissons</button>
+          <button class="category-tab" id="tab-food" type="button" role="tab" aria-selected="false" aria-controls="panel-food" tabindex="-1" data-category="Food" data-i18n="nav_food">Restauration</button>
+          <button class="category-tab" id="tab-sushi" type="button" role="tab" aria-selected="false" aria-controls="panel-sushi" tabindex="-1" data-category="Sushi" data-i18n="nav_sushi">Sushi</button>
+          <button class="category-tab" id="tab-offres" type="button" role="tab" aria-selected="false" aria-controls="panel-offres" tabindex="-1" data-category="Offres" data-i18n="nav_offers">Offres</button>
         </div>
         <div class="menu-panel" id="panel-beverages" role="tabpanel" aria-labelledby="tab-beverages" tabindex="0" hidden>
-          <h3 class="menu-category-title"><svg class="icon" aria-hidden="true"><use href="#icon-cup"/></svg><span>Beverages</span></h3>
+          <h3 class="menu-category-title"><svg class="icon" aria-hidden="true"><use href="#icon-cup"/></svg><span data-i18n="nav_beverages">Boissons</span></h3>
           <ul class="product-grid"></ul>
         </div>
         <div class="menu-panel" id="panel-food" role="tabpanel" aria-labelledby="tab-food" tabindex="0" hidden>
-          <h3 class="menu-category-title"><svg class="icon" aria-hidden="true"><use href="#icon-utensils"/></svg><span>Food</span></h3>
+          <h3 class="menu-category-title"><svg class="icon" aria-hidden="true"><use href="#icon-utensils"/></svg><span data-i18n="nav_food">Restauration</span></h3>
           <ul class="product-grid"></ul>
         </div>
         <div class="menu-panel" id="panel-sushi" role="tabpanel" aria-labelledby="tab-sushi" tabindex="0" hidden>
-          <h3 class="menu-category-title"><svg class="icon" aria-hidden="true"><use href="#icon-sushi"/></svg><span>Sushi</span></h3>
+          <h3 class="menu-category-title"><svg class="icon" aria-hidden="true"><use href="#icon-sushi"/></svg><span data-i18n="nav_sushi">Sushi</span></h3>
           <ul class="product-grid"></ul>
         </div>
         <div class="menu-panel offers-panel" id="panel-offres" role="tabpanel" aria-labelledby="tab-offres" tabindex="0" hidden>
-          <h3 class="menu-category-title"><svg class="icon" aria-hidden="true"><use href="#icon-spark"/></svg><span>Offres</span></h3>
-          <p class="offers-intro">Des formules généreuses pour le petit-déjeuner ou le goûter, préparées dans l’esprit Juff Coffee.</p>
+          <h3 class="menu-category-title"><svg class="icon" aria-hidden="true"><use href="#icon-spark"/></svg><span data-i18n="nav_offers">Offres</span></h3>
+          <p class="offers-intro" data-i18n="offers_intro">Des formules généreuses pour le petit-déjeuner ou le goûter, préparées dans l’esprit Juff Coffee.</p>
           <div class="offers-grid"></div>
         </div>
         <noscript><p class="menu-preview-note">Activez JavaScript pour explorer les catégories. Vous pouvez aussi nous contacter sur WhatsApp ou Facebook.</p></noscript>
       </section>
 
-      <section class="contact-strip" aria-label="Contacter Juff Coffee">
+      <section class="contact-strip" aria-label="Contacter Juff Coffee" data-i18n-aria="contact_label">
         <a class="contact-card contact-whatsapp" href="https://wa.me/212631139014" target="_blank" rel="noopener noreferrer" aria-label="Contacter Juff Coffee sur WhatsApp (nouvel onglet)" data-social="whatsapp">
-          <svg class="icon" aria-hidden="true"><use href="#icon-whatsapp"/></svg><span><small>تواصل معنا عبر</small>WhatsApp</span><b aria-hidden="true">›</b>
+          <svg class="icon" aria-hidden="true"><use href="#icon-whatsapp"/></svg><span><small data-i18n="contact_via">Contactez-nous sur</small><span class="i18n-text" data-i18n="whatsapp">WhatsApp</span></span><b aria-hidden="true">›</b>
         </a>
         <a class="contact-card contact-facebook" href="https://www.facebook.com/share/1C9qgVSaXs/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" aria-label="Suivre Juff Coffee sur Facebook (nouvel onglet)" data-social="facebook">
-          <svg class="icon" aria-hidden="true"><use href="#icon-facebook"/></svg><span><small>تابعنا على</small>Facebook</span><b aria-hidden="true">›</b>
+          <svg class="icon" aria-hidden="true"><use href="#icon-facebook"/></svg><span><small data-i18n="follow_us">Suivez-nous sur</small><span class="i18n-text" data-i18n="facebook">Facebook</span></span><b aria-hidden="true">›</b>
         </a>
       </section>
     </main>
-    <footer class="site-footer"><span>© <span id="year">2026</span> Juff Coffee</span><span>Du café. Du bonheur. Tout simplement.</span><a href="#home">Retour en haut <span aria-hidden="true">↑</span></a></footer>
+    <footer class="site-footer"><span>© <span id="year">2026</span> Juff Coffee</span><span data-i18n="footer_text">Du café. Du bonheur. Tout simplement.</span><a href="#home"><span class="i18n-text" data-i18n="back_top">Retour en haut</span> <span aria-hidden="true">↑</span></a></footer>
   </div>
 
   <dialog class="info-dialog" id="info-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-description">
-    <button class="dialog-close" type="button" aria-label="Fermer" autofocus>×</button>
+    <button class="dialog-close" type="button" aria-label="Fermer" data-i18n-aria="close" autofocus>×</button>
     <img src="assets/logo.svg" width="64" height="64" alt="">
     <p class="eyebrow">JUFF COFFEE</p>
-    <h2 id="dialog-title">À très bientôt.</h2>
+    <h2 id="dialog-title" data-i18n="soon_title">À très bientôt.</h2>
     <p id="dialog-description"></p>
     <div class="dialog-socials" hidden>
-      <a class="social-button whatsapp" href="https://wa.me/212631139014" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp (nouvel onglet)" data-social="whatsapp"><svg class="icon" aria-hidden="true"><use href="#icon-whatsapp"/></svg>WhatsApp</a>
-      <a class="social-button facebook" href="https://www.facebook.com/share/1C9qgVSaXs/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" aria-label="Facebook (nouvel onglet)" data-social="facebook"><svg class="icon" aria-hidden="true"><use href="#icon-facebook"/></svg>Facebook</a>
+      <a class="social-button whatsapp" href="https://wa.me/212631139014" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp (nouvel onglet)" data-social="whatsapp"><svg class="icon" aria-hidden="true"><use href="#icon-whatsapp"/></svg><span class="i18n-text" data-i18n="whatsapp">WhatsApp</span></a>
+      <a class="social-button facebook" href="https://www.facebook.com/share/1C9qgVSaXs/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" aria-label="Facebook (nouvel onglet)" data-social="facebook"><svg class="icon" aria-hidden="true"><use href="#icon-facebook"/></svg><span class="i18n-text" data-i18n="facebook">Facebook</span></a>
     </div>
-    <button class="button button-primary dialog-done" type="button">Revenir à l’accueil <svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></button>
+    <button class="button button-primary dialog-done" type="button"><span class="i18n-text" data-i18n="back_home">Revenir à l’accueil</span> <svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></button>
   </dialog>
-  <button class="cart-toggle" type="button" aria-label="Ouvrir ma commande" aria-haspopup="dialog" aria-controls="order-dialog" hidden>Ma commande <span class="cart-count">0</span></button>
+  <button class="cart-toggle" type="button" aria-label="Ouvrir ma commande" data-i18n-aria="open_order" aria-haspopup="dialog" aria-controls="order-dialog" hidden><span class="i18n-text" data-i18n="my_order">Ma commande</span> <span class="cart-count">0</span></button>
   <p class="sr-only" id="cart-status" role="status" aria-live="polite"></p>
   <dialog class="order-dialog cart-dialog" id="order-dialog" aria-labelledby="order-dialog-title" aria-describedby="order-dialog-description">
-    <button class="order-dialog-close" type="button" aria-label="Fermer">×</button>
+    <button class="order-dialog-close" type="button" aria-label="Fermer" data-i18n-aria="close">×</button>
     <img src="assets/logo.svg" width="58" height="58" alt="">
-    <p class="eyebrow"><span></span> COMMANDER</p>
-    <h2 id="order-dialog-title">Ma commande</h2>
-    <p id="order-dialog-description">Vérifiez vos articles avant de continuer sur WhatsApp.</p>
-    <p class="cart-empty">Votre commande est vide.</p>
+    <p class="eyebrow"><span></span> <span class="i18n-text" data-i18n="order_badge">COMMANDER</span></p>
+    <h2 id="order-dialog-title" data-i18n="my_order">Ma commande</h2>
+    <p id="order-dialog-description" data-i18n="order_description">Vérifiez vos articles avant de continuer sur WhatsApp.</p>
+    <p class="cart-empty" data-i18n="empty_cart">Votre commande est vide.</p>
     <ul class="cart-items"></ul>
-    <p class="cart-storage-note" hidden>Votre commande reste disponible dans cet onglet, mais ne peut pas être enregistrée sur cet appareil.</p>
+    <p class="cart-storage-note" hidden data-i18n="storage_note">Votre commande reste disponible dans cet onglet, mais ne peut pas être enregistrée sur cet appareil.</p>
     <div class="cart-footer">
-    <button class="cart-clear" type="button" disabled>Vider la commande</button>
+    <button class="cart-clear" type="button" disabled data-i18n="clear_cart">Vider la commande</button>
     <button class="order-dialog-whatsapp" type="button" disabled>
       <svg class="icon" aria-hidden="true"><use href="#icon-whatsapp"/></svg>
-      Commander sur WhatsApp
+      <span class="i18n-text" data-i18n="checkout">Commander sur WhatsApp</span>
     </button>
     </div>
   </dialog>
@@ -270,7 +274,7 @@
       <article class="product-card">
         <div class="product-media">
           <img class="product-image" width="640" height="480" loading="lazy" decoding="async" fetchpriority="low" alt="" hidden>
-          <div class="product-placeholder" aria-hidden="true"><svg class="icon"><use href="#icon-cup"/></svg><span>PHOTO À VENIR</span></div>
+          <div class="product-placeholder" aria-hidden="true"><svg class="icon"><use href="#icon-cup"/></svg><span data-i18n="photo_pending">PHOTO À VENIR</span></div>
           <span class="product-badge" hidden></span>
         </div>
         <div class="product-details">
@@ -284,14 +288,14 @@
           </dl>
         </div>
         <div class="product-order-controls">
-          <label class="product-type-label">Type</label>
-          <select class="product-type" required><option value="">Choisir…</option></select>
-          <div class="quantity-stepper" role="group" aria-label="Quantité" data-quantity-control>
-            <button type="button" data-quantity-action="decrease" aria-label="Diminuer la quantité">−</button>
+          <label class="product-type-label" data-i18n="choose_type">Type</label>
+          <select class="product-type" required><option value="" data-i18n="choose_placeholder">Choisir…</option></select>
+          <div class="quantity-stepper" role="group" aria-label="Quantité" data-i18n-aria="quantity" data-quantity-control>
+            <button type="button" data-quantity-action="decrease" aria-label="Diminuer la quantité" data-i18n-aria="decrease">−</button>
             <output aria-live="polite">1</output>
-            <button type="button" data-quantity-action="increase" aria-label="Augmenter la quantité">+</button>
+            <button type="button" data-quantity-action="increase" aria-label="Augmenter la quantité" data-i18n-aria="increase">+</button>
           </div>
-          <button class="product-order-button" type="button" data-product-order>Ajouter</button>
+          <button class="product-order-button" type="button" data-product-order data-i18n="add_button">Ajouter</button>
           <p class="product-order-feedback" role="status" hidden></p>
         </div>
       </article>
@@ -314,11 +318,11 @@
         <div class="offer-actions">
           <div class="quantity-stepper" role="group" data-quantity-control>
             <span class="sr-only quantity-label"></span>
-            <button type="button" data-quantity-action="decrease" aria-label="Diminuer la quantité">−</button>
+            <button type="button" data-quantity-action="decrease" aria-label="Diminuer la quantité" data-i18n-aria="decrease">−</button>
             <output aria-live="polite">1</output>
-            <button type="button" data-quantity-action="increase" aria-label="Augmenter la quantité">+</button>
+            <button type="button" data-quantity-action="increase" aria-label="Augmenter la quantité" data-i18n-aria="increase">+</button>
           </div>
-          <button class="offer-order-button" type="button">Ajouter à la commande</button>
+          <button class="offer-order-button" type="button" data-i18n="add_order">Ajouter à la commande</button>
         </div>
         <p class="offer-order-feedback" role="status" hidden></p>
       </div>

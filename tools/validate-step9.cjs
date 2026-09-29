@@ -35,35 +35,11 @@ assert(JSON.stringify(offerPrices) === JSON.stringify({
   'Pineapple Jam Toast + Lingzhi Coffee 3in1': 25,
 }), 'Offer prices or names do not match the approved list');
 
-function productMessage(name, quantity) {
-  return `Bonjour Juff Coffee 👋\nJe souhaite commander :\n\nProduit : ${name}\nQuantité : ${quantity}\n\nMerci.`;
-}
-
-function offerMessage(offer, quantity, selections = {}) {
-  const content = offer.fixedItems.map(item => `• ${item}`);
-  offer.choices.forEach(choice => content.push(`• ${choice.key} : ${selections[choice.key] || choice.options[0]}`));
-  return `Bonjour Juff Coffee 👋\nJe souhaite commander cette offre :\n\nFormule : ${offer.name}\nPrix : ${offer.price} MAD\nQuantité : ${quantity}\n\nContenu :\n${content.join('\n')}\n\nMerci.`;
-}
-
-function testUrl(message, expectedParts) {
-  const url = new URL(`https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(message)}`);
-  assert(url.hostname === 'wa.me' && url.pathname === `/${CONTACT.whatsapp}`, 'Invalid WhatsApp destination');
-  const decoded = url.searchParams.get('text');
-  expectedParts.forEach(part => assert(decoded.includes(part), `WhatsApp message is missing: ${part}`));
-}
-
-testUrl(productMessage('CORDYCEPS COFFEE', 2), ['CORDYCEPS COFFEE', 'Quantité : 2']);
-testUrl(productMessage('PINEAPPLE JAM TOAST', 1), ['PINEAPPLE JAM TOAST', 'Quantité : 1']);
-testUrl(productMessage('NIGIRI — 2 PIECES', 3), ['NIGIRI — 2 PIECES', 'Quantité : 3']);
-testUrl(offerMessage(OFFERS[1], 1), ['Formule Fraîcheur', 'Prix : 49 MAD', 'Iced Zhi Mocha']);
-testUrl(offerMessage(OFFERS[4], 2, { Café: 'Lion’s Mane', Crêpe: 'Nutella' }), ['Formule Gourmand', 'Quantité : 2', 'Café : Lion’s Mane', 'Crêpe : Nutella']);
-testUrl(offerMessage(OFFERS[6], 1), ['Apple Fermented Jam Toast + Cordyceps Coffee', 'Toast à la confiture de pomme fermentée']);
-
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 assert((html.match(/data-category=/g) || []).length === 4, 'Expected four menu category tabs');
 assert(html.includes('data-category="Offres"'), 'Offers tab is missing');
 assert(html.includes('data-product-order'), 'Compact product order control is missing');
-assert(html.includes('Commander sur WhatsApp'), 'Visible offer CTA is missing');
+assert(html.includes('Commander sur WhatsApp'), 'Cart checkout action is missing');
 assert(source.includes('encodeURIComponent(message)'), 'WhatsApp messages are not safely encoded');
 assert(source.includes("menuSection.addEventListener('click'"), 'Delegated menu event handling is missing');
 
@@ -75,6 +51,5 @@ console.log(JSON.stringify({
   offerImages: OFFERS.length,
   orderableItems: products.length + OFFERS.length,
   whatsapp: CONTACT.whatsapp,
-  messageCases: 6,
   result: 'PASS',
 }, null, 2));

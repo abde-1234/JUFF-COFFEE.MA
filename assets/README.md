@@ -4,6 +4,8 @@ For development, open `../index.html` directly in a modern browser. For deployme
 
 ## Structure
 
+The current ordering flow uses `../cart.js` for a shared multi-product cart. Every standard product starts with an empty DP/RP/SV/PV selector; selecting a type is required before adding. A successful addition resets the selector. Quantities, selected offer options, removal, clearing, and a single combined WhatsApp checkout are available in “Ma commande”. Cart identifiers/options/quantities persist under `juffOrderCart:v1`; no personal data is stored. DP/RP retain MAD, SV/PV remain unitless, and no combined monetary total is shown. See `../CART-VERIFICATION.md` for the current browser results. Run `npm test` for cart regression tests.
+
 - `index.html`: semantic homepage, poster-style hero, experience video, featured promotions, navigation, contact dialog, menu tab panels, bottom social strip, and reusable product card template.
 - `style.css`: mobile-first poster layout, design tokens, compact two-column product cards, responsive media layouts, and reduced-motion support.
 - `script.js`: real product data and image paths, deferred video loading, menu rendering and keyboard navigation, mobile navigation, dialogs, and business contact configuration.

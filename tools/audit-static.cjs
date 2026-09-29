@@ -49,12 +49,14 @@ async function main() {
   assert.deepEqual(productionPaths, []);
   assert.deepEqual(secrets, []);
   assert.deepEqual([...phoneNumbers], ['212631139014']);
-  const unchanged = ['index.html', 'script.js'].map(file => {
-    const prior = execFileSync('git', ['show', `HEAD:${file}`], { cwd: root });
-    // Ignore checkout line-ending conversion while comparing all source content.
-    assert.equal(prior.toString('utf8').replace(/\r\n/g, '\n'), fs.readFileSync(path.join(root, file), 'utf8').replace(/\r\n/g, '\n'));
-    return file;
-  });
+  const priorScript = execFileSync('git', ['show', 'HEAD:script.js'], { cwd: root }).toString('utf8').replace(/\r\n/g, '\n');
+  const currentScript = fs.readFileSync(path.join(root, 'script.js'), 'utf8').replace(/\r\n/g, '\n');
+  assert.equal(priorScript.split('const toggle')[0], currentScript.split('const toggle')[0], 'Approved menu/contact data changed');
+  const priorHtml = execFileSync('git', ['show', 'HEAD:index.html'], { cwd: root }).toString('utf8').replace(/\r\n/g, '\n');
+  const currentHtml = fs.readFileSync(path.join(root, 'index.html'), 'utf8').replace(/\r\n/g, '\n');
+  const metadata = html => html.split('<body>')[0].replace('  <script src="cart.js" defer></script>\n', '').replace(' dir="ltr"', '').replace(' data-i18n="page_title"', '').replace('"name": "Beverages"', '"name": "Boissons"').replace('"name": "Food"', '"name": "Restauration"');
+  assert.equal(metadata(priorHtml), metadata(currentHtml), 'Existing SEO metadata changed');
+  const unchanged = ['approved menu/contact data', 'existing SEO metadata'];
   const requests = [];
   for (const file of files) {
     const response = await fetch(`${base}/${file}`);

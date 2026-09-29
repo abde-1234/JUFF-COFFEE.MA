@@ -196,7 +196,13 @@ const cartToggle = document.querySelector('.cart-toggle');
 const cartItems = document.querySelector('.cart-items');
 const cartStatus = document.querySelector('#cart-status');
 const CART_STORAGE_KEY = 'juffOrderCart:v1';
-const orderCart = new JuffOrderCart(MENU_PRODUCTS, OFFERS);
+const LANGUAGE_STORAGE_KEY = 'juffLanguage:v1';
+let language = 'fr';
+try { if (localStorage.getItem(LANGUAGE_STORAGE_KEY) === 'ar') language = 'ar'; } catch { /* Use French when storage is unavailable. */ }
+const t = (key, params = {}) => JuffOrderCart.translate(language, key, {
+  ...params, ...(params.name ? { name: translations[language].offer_text[params.name] || params.name } : {}),
+});
+const orderCart = new JuffOrderCart(MENU_PRODUCTS, OFFERS, language);
 try { orderCart.restore(localStorage.getItem(CART_STORAGE_KEY)); }
 catch { document.querySelector('.cart-storage-note').hidden = false; }
 
@@ -207,14 +213,14 @@ document.querySelector('#year').textContent = new Date().getFullYear();
 function closeNavigation(restoreFocus = false) {
   navigation.classList.remove('is-open');
   toggle.setAttribute('aria-expanded', 'false');
-  toggle.setAttribute('aria-label', 'Ouvrir la navigation');
+  toggle.setAttribute('aria-label', t('nav_open'));
   if (restoreFocus) toggle.focus();
 }
 
 toggle.addEventListener('click', () => {
   const expanded = toggle.getAttribute('aria-expanded') !== 'true';
   toggle.setAttribute('aria-expanded', String(expanded));
-  toggle.setAttribute('aria-label', expanded ? 'Fermer la navigation' : 'Ouvrir la navigation');
+  toggle.setAttribute('aria-label', expanded ? t('nav_close') : t('nav_open'));
   navigation.classList.toggle('is-open', expanded);
 });
 
@@ -235,8 +241,10 @@ mobileViewport.addEventListener('change', () => closeNavigation());
 
 function showInfo(title, description, showContacts = false) {
   closeNavigation(mobileViewport.matches && navigation.contains(document.activeElement));
-  dialogTitle.textContent = title;
-  dialogDescription.textContent = description;
+  dialogTitle.dataset.i18n = title;
+  dialogTitle.textContent = t(title);
+  dialogDescription.dataset.i18n = description;
+  dialogDescription.textContent = t(description);
   dialogSocials.hidden = !showContacts;
   if (!dialog.open) dialog.showModal();
 }
@@ -271,28 +279,29 @@ function renderCart(focusId, focusAction) {
   orderCart.items.forEach((item) => {
     const row = cartElement('li', 'cart-item');
     row.dataset.cartId = item.id;
-    row.append(cartElement('h3', '', item.name));
-    row.append(cartElement('p', 'cart-item-value', item.kind === 'product' ? `${item.type} — ${item.displayValue}` : `Prix : ${item.displayValue}`));
+    row.append(cartElement('h3', '', orderCart.itemName(item)));
+    row.querySelector('h3').dir = 'auto';
+    row.append(cartElement('p', 'cart-item-value', item.kind === 'product' ? `${item.type} — ${item.displayValue}` : `${t('price')} : ${item.displayValue}`));
     if (item.kind === 'offer') {
-      row.append(cartElement('p', 'cart-item-options', [...item.content, ...Object.entries(item.options).map(([key, value]) => `${key} : ${value}`)].join(' · ')));
+      row.append(cartElement('p', 'cart-item-options', [...item.content.map(value => orderCart.offerText(value)), ...Object.entries(item.options).map(([key, value]) => `${orderCart.offerText(key)} : ${orderCart.offerText(value)}`)].join(' · ')));
     }
     const actions = cartElement('div', 'cart-item-actions');
     const quantity = cartElement('div', 'quantity-stepper');
     quantity.setAttribute('role', 'group');
-    quantity.setAttribute('aria-label', `Quantité pour ${item.name}${item.type ? `, ${item.type}` : ''}`);
+    quantity.setAttribute('aria-label', t('quantity_for', { name: orderCart.itemName(item) + (item.type ? ', ' + item.type : '') }));
     for (const action of ['decrease', 'increase']) {
       if (action === 'increase') quantity.append(cartElement('output', '', String(item.quantity)));
       const button = cartElement('button', '', action === 'decrease' ? '−' : '+');
       button.type = 'button';
       button.dataset.cartAction = action;
-      button.setAttribute('aria-label', action === 'decrease' ? 'Diminuer la quantité' : 'Augmenter la quantité');
+      button.setAttribute('aria-label', action === 'decrease' ? t('decrease') : t('increase'));
       button.disabled = action === 'decrease' ? item.quantity === 1 : item.quantity === 99;
       quantity.append(button);
     }
-    const remove = cartElement('button', 'cart-remove', 'Supprimer');
+    const remove = cartElement('button', 'cart-remove', t('remove_item'));
     remove.type = 'button';
     remove.dataset.cartAction = 'remove';
-    remove.setAttribute('aria-label', `Retirer ${item.name} de la commande`);
+    remove.setAttribute('aria-label', t('remove_named', { name: orderCart.itemName(item) }));
     actions.append(quantity, remove);
     row.append(actions);
     fragment.append(row);
@@ -319,7 +328,9 @@ function saveCart(focusId, focusAction) {
 
 function showOrderFeedback(card, message, invalid = false) {
   const feedback = card.querySelector('.product-order-feedback, .offer-order-feedback');
-  feedback.textContent = message;
+  feedback.dataset.i18n = typeof message === 'string' ? message : message.translationKey;
+  feedback.dataset.i18nParams = JSON.stringify(message.translationParams || {});
+  feedback.textContent = t(feedback.dataset.i18n, message.translationParams);
   feedback.hidden = false;
   feedback.classList.toggle('is-error', invalid);
 }
@@ -363,11 +374,11 @@ categoryTabs.forEach((tab) => {
     }
     const orderButton = card.querySelector('[data-product-order]');
     card.querySelector('.product-card').dataset.productId = `${tab.dataset.category}:${product.name}`;
-    orderButton.setAttribute('aria-label', `Ajouter ${product.name} à la commande`);
+    orderButton.setAttribute('aria-label', t('add_named', { name: product.name }));
     const typeSelect = card.querySelector('.product-type');
     typeSelect.id = `product-${tab.dataset.category}-${productIndex}-type`;
     card.querySelector('.product-type-label').htmlFor = typeSelect.id;
-    typeSelect.setAttribute('aria-label', `Type pour ${product.name}`);
+    typeSelect.setAttribute('aria-label', t('type_for', { name: product.name }));
     const feedback = card.querySelector('.product-order-feedback');
     feedback.id = `${typeSelect.id}-feedback`;
     typeSelect.setAttribute('aria-describedby', feedback.id);
@@ -377,7 +388,7 @@ categoryTabs.forEach((tab) => {
     }
     // RP's visual emphasis in the price list never supplies a selection.
     typeSelect.value = '';
-    card.querySelector('[data-quantity-control]').setAttribute('aria-label', `Quantité pour ${product.name}`);
+    card.querySelector('[data-quantity-control]').setAttribute('aria-label', t('quantity_for', { name: product.name }));
     fragment.append(card);
   });
   panel.querySelector('.product-grid').append(fragment);
@@ -431,11 +442,11 @@ OFFERS.forEach((offer, offerIndex) => {
   const quantityLabel = card.querySelector('.quantity-label');
   const quantityId = `${offer.id}-quantity-label`;
   quantityLabel.id = quantityId;
-  quantityLabel.textContent = `Quantité pour ${offer.name}`;
+  quantityLabel.textContent = t('quantity_for', { name: offer.name });
   quantityControl.setAttribute('aria-labelledby', quantityId);
 
   const orderLink = card.querySelector('.offer-order-button');
-  orderLink.setAttribute('aria-label', `Ajouter ${offer.name} à la commande`);
+  orderLink.setAttribute('aria-label', t('add_named', { name: offer.name }));
   offersFragment.append(card);
 });
 
@@ -451,7 +462,7 @@ orderDialogLink.addEventListener('click', () => {
 document.querySelector('.cart-clear').addEventListener('click', () => {
   orderCart.clear();
   saveCart();
-  cartStatus.textContent = 'Votre commande est vide.';
+  announceCart('empty_cart');
   orderDialog.querySelector('.order-dialog-close').focus();
 });
 
@@ -466,10 +477,10 @@ menuSection.addEventListener('click', (event) => {
       select.removeAttribute('aria-invalid');
       select.value = '';
       setQuantity(card.querySelector('[data-quantity-control]'), 1);
-      showOrderFeedback(card, 'Ajouté à la commande.');
-      cartStatus.textContent = `${orderCart.count} article(s) dans votre commande.`;
+      showOrderFeedback(card, 'cart_success');
+      announceCart('cart_count');
     } catch (error) {
-      showOrderFeedback(card, error.message, true);
+      showOrderFeedback(card, error, true);
       if (!select.value) { select.setAttribute('aria-invalid', 'true'); select.focus(); }
     }
     return;
@@ -482,9 +493,9 @@ menuSection.addEventListener('click', (event) => {
     try {
       orderCart.addOffer(offer.id, options, quantityFrom(card.querySelector('[data-quantity-control]')));
       saveCart();
-      showOrderFeedback(card, 'Ajouté à la commande.');
-      cartStatus.textContent = `${orderCart.count} article(s) dans votre commande.`;
-    } catch (error) { showOrderFeedback(card, error.message, true); }
+      showOrderFeedback(card, 'cart_success');
+      announceCart('cart_count');
+    } catch (error) { showOrderFeedback(card, error, true); }
     return;
   }
 
@@ -511,7 +522,7 @@ orderDialog.addEventListener('click', (event) => {
     if (action === 'remove') orderCart.remove(id);
     else orderCart.changeQuantity(id, item.quantity + (action === 'increase' ? 1 : -1));
     saveCart(id, action);
-    cartStatus.textContent = `${orderCart.count} article(s) dans votre commande.`;
+    announceCart('cart_count');
     return;
   }
   if (event.target.closest('.order-dialog-close')) {
@@ -540,8 +551,9 @@ categoryTabs.forEach((tab, index) => {
   tab.addEventListener('click', () => selectCategory(tab.dataset.category));
   tab.addEventListener('keydown', (event) => {
     let nextIndex;
-    if (event.key === 'ArrowRight') nextIndex = (index + 1) % categoryTabs.length;
-    else if (event.key === 'ArrowLeft') nextIndex = (index - 1 + categoryTabs.length) % categoryTabs.length;
+    const direction = language === 'ar' ? -1 : 1;
+    if (event.key === 'ArrowRight') nextIndex = (index + direction + categoryTabs.length) % categoryTabs.length;
+    else if (event.key === 'ArrowLeft') nextIndex = (index - direction + categoryTabs.length) % categoryTabs.length;
     else if (event.key === 'Home') nextIndex = 0;
     else if (event.key === 'End') nextIndex = categoryTabs.length - 1;
     else return; // Native buttons already support Enter and Space.
@@ -581,7 +593,7 @@ function loadExperienceVideo() {
 
 function updateVideoControl() {
   const isPlaying = !experienceVideo.paused;
-  videoToggle.setAttribute('aria-label', isPlaying ? 'Mettre la vidéo Juff Coffee en pause' : 'Lire la vidéo Juff Coffee');
+  videoToggle.setAttribute('aria-label', t(isPlaying ? 'video_pause' : 'video_play'));
   videoToggle.setAttribute('aria-pressed', String(isPlaying));
   videoPlayIcon.hidden = isPlaying;
   videoPauseIcon.hidden = !isPlaying;
@@ -608,7 +620,7 @@ const videoObserver = new IntersectionObserver((entries, observer) => {
 videoObserver.observe(experienceVideo);
 
 document.querySelectorAll('[data-contact]').forEach((button) => {
-  button.addEventListener('click', () => showInfo('Gardons le contact.', 'Un petit bonjour, une question ? Retrouvez Juff Coffee sur nos réseaux.', true));
+  button.addEventListener('click', () => showInfo('contact_dialog_title', 'contact_dialog_text', true));
 });
 
 function socialUrl(platform) {
@@ -632,7 +644,7 @@ document.querySelectorAll('[data-social]').forEach((link) => {
   } else {
     link.addEventListener('click', (event) => {
       event.preventDefault();
-      showInfo('À très bientôt.', 'Nos coordonnées seront bientôt disponibles. Nous avons hâte de partager un bon café avec vous.');
+      showInfo('soon_title', 'soon_text');
     });
   }
 });
@@ -645,3 +657,86 @@ dialog.addEventListener('click', (event) => {
   const bounds = dialog.getBoundingClientRect();
   if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close();
 });
+
+
+// Update copy in place: selections, quantities, category, cart IDs and persisted
+// order data never depend on a translated label.
+function announceCart(key) {
+  cartStatus.dataset.i18n = key;
+  cartStatus.dataset.i18nParams = JSON.stringify({ count: orderCart.count });
+  cartStatus.textContent = t(key, { count: orderCart.count });
+}
+
+function applyLanguage(nextLanguage, persist = false) {
+  language = nextLanguage === 'ar' ? 'ar' : 'fr';
+  orderCart.setLanguage(language);
+  document.documentElement.lang = language;
+  document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
+  if (persist) {
+    try { localStorage.setItem(LANGUAGE_STORAGE_KEY, language); } catch { /* Keep switching available in memory. */ }
+  }
+  document.querySelectorAll('[data-i18n]').forEach(element => {
+    element.textContent = t(element.dataset.i18n, JSON.parse(element.dataset.i18nParams || '{}'));
+  });
+  // Keep Latin codes, units and abbreviations (DP, RP, MAD…) visually ordered
+  // inside translated sentences. Dictionary strings stay untouched; only
+  // bidirectional isolation is added for rendering.
+  document.querySelectorAll('[data-bidi-fix]').forEach(element => {
+    const fragment = document.createDocumentFragment();
+    element.textContent.split(/(\(?[A-Za-z0-9][A-Za-z0-9()\/.,+·%°-]*(?: [A-Za-z0-9()\/.,+·%°-]+)*\)?)/g).forEach(part => {
+      if (!part) return;
+      if (/^[A-Za-z0-9(]/.test(part)) {
+        const isolate = document.createElement('bdi');
+        isolate.textContent = part;
+        fragment.append(isolate);
+      } else {
+        fragment.append(document.createTextNode(part));
+      }
+    });
+    element.replaceChildren(fragment);
+  });
+  for (const [hook, attribute] of [['i18nAria', 'aria-label'], ['i18nAlt', 'alt']]) {
+    document.querySelectorAll(attribute === 'alt' ? '[data-i18n-alt]' : '[data-i18n-aria]').forEach(element => {
+      element.setAttribute(attribute, t(element.dataset[hook]));
+    });
+  }
+  document.querySelectorAll('[data-language]').forEach(button => {
+    button.setAttribute('aria-pressed', String(button.dataset.language === language));
+  });
+  toggle.setAttribute('aria-label', t(toggle.getAttribute('aria-expanded') === 'true' ? 'nav_close' : 'nav_open'));
+  document.querySelectorAll('[data-social]').forEach(link => {
+    link.setAttribute('aria-label', t('social_tab', { name: t(link.dataset.social) }));
+  });
+  document.querySelectorAll('.product-card').forEach(card => {
+    const product = orderCart.products.get(card.dataset.productId);
+    const name = product.name;
+    card.querySelector('.product-name').dir = 'auto';
+    card.querySelector('[data-product-order]').setAttribute('aria-label', t('add_named', { name }));
+    card.querySelector('.product-type').setAttribute('aria-label', t('type_for', { name }));
+    card.querySelector('[data-quantity-control]').setAttribute('aria-label', t('quantity_for', { name }));
+    card.querySelector('.product-image').alt = language === 'fr' ? product.imageAlt || name : t('product_photo', { name });
+  });
+  document.querySelectorAll('.offer-card').forEach(card => {
+    const offer = OFFERS[Number(card.dataset.offerIndex)];
+    const name = orderCart.offerText(offer.name);
+    for (const field of ['name', 'subtitle', 'note', 'badge']) {
+      card.querySelector('.offer-' + field).textContent = orderCart.offerText(offer[field] || '');
+    }
+    card.querySelector('.offer-image').alt = language === 'fr' ? offer.imageAlt : t('product_photo', { name });
+    card.querySelectorAll('.offer-items li').forEach((item, index) => { item.textContent = orderCart.offerText(offer.items[index]); });
+    card.querySelectorAll('.offer-field').forEach((field, index) => {
+      field.querySelector('label').textContent = orderCart.offerText(offer.choices[index].label);
+      field.querySelectorAll('option').forEach(option => { option.textContent = orderCart.offerText(option.value); });
+    });
+    card.querySelector('.quantity-label').textContent = t('quantity_for', { name });
+    card.querySelector('.offer-order-button').setAttribute('aria-label', t('add_named', { name }));
+  });
+  updateVideoControl();
+  renderCart();
+}
+
+document.querySelector('.language-switcher').hidden = false;
+document.querySelectorAll('[data-language]').forEach(button => {
+  button.addEventListener('click', () => applyLanguage(button.dataset.language, true));
+});
+applyLanguage(language);

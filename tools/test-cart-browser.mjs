@@ -71,7 +71,7 @@ export function cartChecks(page, context, outgoing) {
     await add('beverages', 'KIWI JUICE', 'PV', 1);
     await open();
     assert.equal(await line('CORDYCEPS COFFEE').count(), 2);
-    assert.deepEqual(await line('CORDYCEPS COFFEE').locator('output').allTextContents(), ['2', '2']);
+    assert.equal(JSON.stringify(await line('CORDYCEPS COFFEE').locator('output').allTextContents()), JSON.stringify(['2', '2']));
     const mixed = await checkout();
     assert.ok(mixed.message.includes('Type : SV\nValeur : 6,20\n'));
     assert.ok(mixed.message.includes('Type : PV\nValeur : 1,00\n'));
@@ -109,6 +109,7 @@ export function cartChecks(page, context, outgoing) {
     await first.locator('[data-product-order]').click();
     assert.equal(await page.locator('.cart-count').innerText(), '2');
     await open();
+    await page.waitForFunction(() => { const r = document.querySelector('.cart-dialog').getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth && r.top >= 0 && r.bottom <= innerHeight; });
     const bounds = await page.locator('.cart-dialog').evaluate(e => { const r = e.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth && r.top >= 0 && r.bottom <= innerHeight; });
     assert.ok(bounds, `Cart does not fit ${width}`);
     await page.locator('.cart-item [data-cart-action="decrease"]').click();

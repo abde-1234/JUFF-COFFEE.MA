@@ -71,14 +71,16 @@ export async function createAudit(playwright, channel = 'chrome') {
 
   async function product(category, name, quantity = 2) {
     await page.locator(`#tab-${category.toLowerCase()}`).click();
-    await page.getByRole('button', { name: `Commander ${name} sur WhatsApp`, exact: true }).click();
-    assert.equal(await page.locator('#order-dialog-title').innerText(), name);
-    assert.equal(await page.locator('#order-dialog output').innerText(), '1');
-    assert.ok(await page.locator('#order-dialog [data-quantity-action="decrease"]').isDisabled());
-    for (let q = 1; q < quantity; q++) await page.locator('#order-dialog [data-quantity-action="increase"]').click();
-    await page.locator('#order-dialog [data-quantity-action="increase"]').click();
-    await page.locator('#order-dialog [data-quantity-action="decrease"]').click();
-    await capture(page.locator('.order-dialog-whatsapp'), `Bonjour Juff Coffee 👋\nJe souhaite commander :\n\nProduit : ${name}\nQuantité : ${quantity}\n\nMerci.`, `${category}: ${name}`);
+    const card = page.locator('.product-card').filter({ has: page.getByRole('heading', { name, exact: true }) });
+    await card.locator('.product-type').selectOption('RP'); // Explicit test input; never a UI default.
+    assert.equal(await card.locator('output').innerText(), '1');
+    assert.ok(await card.locator('[data-quantity-action="decrease"]').isDisabled());
+    for (let q = 1; q < quantity; q++) await card.locator('[data-quantity-action="increase"]').click();
+    await card.locator('[data-product-order]').click();
+    await page.locator('.cart-toggle').click();
+    const value = new Intl.NumberFormat('fr-MA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(data.MENU_PRODUCTS[category].find(item => item.name === name).rp);
+    await capture(page.locator('.order-dialog-whatsapp'), `Bonjour Juff Coffee 👋\n\nJe souhaite passer cette commande :\n\n1. ${name}\nType : RP\nValeur : ${value} MAD\nQuantité : ${quantity}\n\nMerci.`, `${category}: ${name}`);
+    await page.locator('.cart-clear').click();
     await page.locator('.order-dialog-close').click();
   }
 
@@ -93,13 +95,17 @@ export async function createAudit(playwright, channel = 'chrome') {
       const choice = item.choices[i];
       const value = choice.options[alternate ? choice.options.length - 1 : 0];
       await card.locator('select').nth(i).selectOption({ label: value });
-      content.push(`• ${choice.key} : ${value}`);
+      content.push(`${choice.key} : ${value}`);
     }
     let existing = Number(await card.locator('output').innerText());
     while (existing > 1) { await card.locator('[data-quantity-action="decrease"]').click(); existing--; }
     assert.ok(await card.locator('[data-quantity-action="decrease"]').isDisabled());
     for (let q = 1; q < quantity; q++) await card.locator('[data-quantity-action="increase"]').click();
-    await capture(card.locator('.offer-order-button'), `Bonjour Juff Coffee 👋\nJe souhaite commander cette offre :\n\nFormule : ${item.name}\nPrix : ${item.price} MAD\nQuantité : ${quantity}\n\nContenu :\n${content.join('\n')}\n\nMerci.`, item.name);
+    await card.locator('.offer-order-button').click();
+    await page.locator('.cart-toggle').click();
+    await capture(page.locator('.order-dialog-whatsapp'), `Bonjour Juff Coffee 👋\n\nJe souhaite passer cette commande :\n\n1. ${item.name}\nPrix : ${item.price} MAD\n${content.join('\n')}\nQuantité : ${quantity}\n\nMerci.`, item.name);
+    await page.locator('.cart-clear').click();
+    await page.locator('.order-dialog-close').click();
   }
 
   async function testWidth(width) {
